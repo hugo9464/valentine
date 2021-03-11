@@ -7,6 +7,12 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = module.exports = express();
 
+const morgan = require("morgan");
+// if (process.env.NODE_ENV === "dev") require("./.secrets");
+// Create the server
+app.use(morgan("tiny")); // logging framework
+console.log(process.env.NODE_ENV, process.env.SECRET);
+
 app.use(helmet());
 app.use(cookieParser());
 
@@ -37,12 +43,24 @@ require(__dirname + '/orders.js');
 require(__dirname + '/admin.js');
 require(__dirname + '/config.js');
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
+if (process.env.NODE_ENV === "production") {
+    // Express will serve up production assets
+    app.use(express.static("build"));
+    app.get("/*", (req, res) => res.sendFile(path.resolve("build", "index.html")));
+  }
+  
+if (process.env.NODE_ENV === "dev") {
+// Express will serve up production assets
+app.use(express.static("public"));
+app.get("*", (req, res) =>
+    res.sendFile(path.resolve("public", "index.html"))
+);
+}
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-});
+// Express will serve up the front-end index.html file if it doesn't recognize the route
 
-app.listen(5000, function() {
-  console.log("Listening on port 5000!");
+// Choose the port and start the server
+const PORT = process.env.PORT || 5000   ;
+app.listen(PORT, () => {
+console.log(`Mixing it up on port ${PORT}`);
 });
