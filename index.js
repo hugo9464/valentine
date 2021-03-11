@@ -7,20 +7,22 @@ const app = module.exports = express();
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
-// const dotenv = require('dotenv').config({ path: 'config.env' });
-const dotenv = require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
+if (process.env.NODE_ENV === 'dev')
+require('dotenv').config({ path: 'config.env' });
+// const dotenv = require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
 app.use(morgan("tiny")); // logging framework
-console.log(process.env.NODE_ENV, process.env.SECRET);
+console.log("toto")
+console.log(process.env.NODE_ENV, process.env.SESSION_SECRET);
 
 app.use(helmet());
 app.use(cookieParser());
 
 // app will not work without setting up the config.env file
 // https://belugajs.com/docs/new-store
-if (dotenv.error) throw dotenv.error;
+// if (dotenv.error) throw dotenv.error;
 
 var sess = {
   secret: process.env.SESSION_SECRET,
