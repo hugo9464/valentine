@@ -1,5 +1,5 @@
 const dotenv = require('dotenv').config({ path: 'config.env' });
-const app = require('./index.js');
+const app = require('../index.js');
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcrypt');

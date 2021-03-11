@@ -1,4 +1,4 @@
-const app = require('./index.js');
+const app = require('../index.js');
 const fs = require('fs-extra');
 const multer = require('multer');
 const path = require('path');

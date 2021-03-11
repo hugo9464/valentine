@@ -1,4 +1,4 @@
-const app = require('./index.js');
+const app = require('../index.js');
 const rimraf = require("rimraf");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 

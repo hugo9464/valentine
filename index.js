@@ -3,9 +3,41 @@ const path = require("path");
 const morgan = require("morgan");
 // if (process.env.NODE_ENV === "dev") require("./.secrets");
 // Create the server
-const app = express();
+const app = module.exports = express();
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+
+const dotenv = require('dotenv').config({ path: 'config.env' });
+const session = require('express-session');
+const bodyParser = require('body-parser');
+
 app.use(morgan("tiny")); // logging framework
 console.log(process.env.NODE_ENV, process.env.SECRET);
+
+app.use(helmet());
+app.use(cookieParser());
+
+// app will not work without setting up the config.env file
+// https://belugajs.com/docs/new-store
+if (dotenv.error) throw dotenv.error;
+
+var sess = {
+  secret: process.env.SESSION_SECRET,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: false
+  },
+  resave: false,
+  saveUninitialized: true,
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1);
+  sess.cookie.secure = true;
+}
+
+app.use(session(sess))
+app.use(bodyParser.json());
 
 // Serve our api message
 app.get("/api/message", async (req, res, next) => {
@@ -15,6 +47,12 @@ app.get("/api/message", async (req, res, next) => {
     next(err);
   }
 });
+
+
+require(__dirname + '/api/product.js');
+require(__dirname + '/api/orders.js');
+require(__dirname + '/api/admin.js');
+require(__dirname + '/api/config.js');
 
 if (process.env.NODE_ENV === "production") {
   // Express will serve up production assets
