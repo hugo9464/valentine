@@ -9,7 +9,7 @@ app.get('/api/product-info/:id', function(req, res) {
     });
 });
 
-app.get('/product-info/', function(req, res) {
+app.get('/api/product-info/', function(req, res) {
   stripe.skus.list(
     function(err, skus) {
       err ? res.status(500).send(err) : res.json(skus.data);
