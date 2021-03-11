@@ -1,4 +1,4 @@
-const dotenv = require('dotenv').config({ path: 'config.env' });
+const dotenv = require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 const app = require('../index.js');
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const rateLimit = require('express-rate-limit');

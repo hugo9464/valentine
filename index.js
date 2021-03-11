@@ -7,7 +7,8 @@ const app = module.exports = express();
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
-const dotenv = require('dotenv').config({ path: 'config.env' });
+// const dotenv = require('dotenv').config({ path: 'config.env' });
+const dotenv = require('dotenv').config({ silent: process.env.NODE_ENV === 'production' })
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
@@ -63,7 +64,7 @@ if (process.env.NODE_ENV === "production") {
 if (process.env.NODE_ENV === "dev") {
   // Express will serve up production assets
   app.use(express.static("public"));
-  app.get("*", (req, res) =>
+  app.get("/*", (req, res) =>
     res.sendFile(path.resolve("public", "index.html"))
   );
 }
